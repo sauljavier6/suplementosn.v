@@ -1,4 +1,4 @@
-import { Table, Model, Column, DataType, PrimaryKey, AutoIncrement, ForeignKey, BelongsTo } from "sequelize-typescript";
+import { Table, Model, Column, DataType, PrimaryKey, AutoIncrement, ForeignKey, BelongsTo, Unique } from "sequelize-typescript";
 import Stock from "./Stock";
 
 @Table({ tableName: "Store" })
@@ -10,13 +10,14 @@ export default class Store extends Model {
   })
   declare ID_Store: number;
 
-  
+  @Unique
   @Column({
     type: DataType.STRING,
     allowNull: false,
   })
   declare store_id: string;
 
+  @Unique
   @ForeignKey(() => Stock)
   @Column({
     type: DataType.STRING,
