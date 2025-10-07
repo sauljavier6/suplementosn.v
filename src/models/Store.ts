@@ -10,7 +10,6 @@ export default class Store extends Model {
   })
   declare ID_Store: number;
 
-  @Unique
   @Column({
     type: DataType.STRING,
     allowNull: false,
