@@ -7,19 +7,12 @@ import {
   AutoIncrement,
   ForeignKey,
   BelongsTo,
-  Index
+  BeforeValidate,
+  Unique,
 } from "sequelize-typescript";
 import Stock from "./Stock";
 
-@Table({
-  tableName: "Store",
-  indexes: [
-    {
-      unique: true,
-      fields: ["store_id", "variant_id"],
-    },
-  ],
-})
+@Table({ tableName: "Store" })
 export default class Store extends Model {
   @PrimaryKey
   @AutoIncrement
@@ -53,51 +46,20 @@ export default class Store extends Model {
     allowNull: false,
   })
   declare updated_at: Date;
-}
 
-
-
-/*
-import { Table, Model, Column, DataType, PrimaryKey, AutoIncrement, ForeignKey, BelongsTo, Unique } from "sequelize-typescript";
-import Stock from "./Stock";
-
-@Table({ tableName: "Store" })
-export default class Store extends Model {
-  @PrimaryKey
-  @AutoIncrement
-  @Column({
-    type: DataType.INTEGER,
-  })
-  declare ID_Store: number;
-
+  // 🔑 Campo concatenado único
+  @Unique
   @Column({
     type: DataType.STRING,
     allowNull: false,
   })
-  declare store_id: string;
+  declare store_variant_key: string;
 
-  //@Unique
-  @ForeignKey(() => Stock)
-  @Column({
-    type: DataType.STRING,
-    allowNull: false,
-  })
-  declare variant_id: string;
-
-  @BelongsTo(() => Stock, { foreignKey: "variant_id", targetKey: "variant_id" })
-  declare stock: Stock;
-
-  @Column({
-    type: DataType.INTEGER,
-    allowNull: false,
-  })
-  declare in_stock: number;
-
-  @Column({
-    type: DataType.DATE,
-    allowNull: false,
-  })
-  declare updated_at: Date;
+  // 🧠 Hook que se ejecuta antes de validar o guardar
+  @BeforeValidate
+  static generateStoreVariantKey(instance: Store) {
+    if (instance.store_id && instance.variant_id) {
+      instance.store_variant_key = `${instance.store_id}_${instance.variant_id}`;
+    }
+  }
 }
-
-*/
