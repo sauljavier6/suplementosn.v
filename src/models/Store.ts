@@ -16,7 +16,7 @@ export default class Store extends Model {
   })
   declare store_id: string;
 
-  @Unique
+  //@Unique
   @ForeignKey(() => Stock)
   @Column({
     type: DataType.STRING,
