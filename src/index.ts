@@ -4,6 +4,7 @@ import cors from "cors";
 import sequelize from "./config/database";
 import indexRoutes from './routes/index';
 import morgan from 'morgan';
+import { startSyncJob } from "./jobs/sync.cron";
 //import path from "path"; 
 
 dotenv.config();
@@ -24,5 +25,8 @@ sequelize.sync({ alter: true }).then(() => {
   console.log("✅ Base de datos conectada");
   app.listen(PORT, () => {
     console.log(`Servidor corriendo en http://localhost:${PORT}`);
+
+    startSyncJob();
+    console.log("🔁 Sync Job iniciado");
   });
 }).catch(err => console.error("❌ Error al conectar BD:", err));

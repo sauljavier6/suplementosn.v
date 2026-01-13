@@ -3,30 +3,52 @@ import cloudinary from "../config/cloudinary";
 import Product from "../models/Product";
 import Stock from "../models/Stock";
 import Store from "../models/Store";
-import { syncItems } from "../services/productService";
-import { syncStores } from "../services/storesService";
-import { syncVariants } from "../services/variantService";
 import { Op } from "sequelize";
 import nodemailer from 'nodemailer';
 import SMTPTransport from "nodemailer/lib/smtp-transport";
+import { runSync } from "../services/sync.service";
+import { syncItems } from "../services/services/productServiceManual";
+import { syncVariants } from "../services/services/variantsServiceManual";
+import { syncStores } from "../services/services/storeServiceManual";
+
+export const syncDataManual = async (req: any, res: any) => {
+  try {
+    const items = await syncItems();
+    const variants = await syncVariants();
+    const stores = await syncStores();
+
+    return res.status(200).json({
+      message: "Sincronización completa",
+      items,
+      variants,
+      stores
+    });
+
+  } catch (error) {
+    console.error("Error sincronizando datos:", error);
+    return res.status(500).json({
+      message: "Error interno del servidor"
+    });
+  }
+};
 
 export const syncData = async (req: any, res: any) => {
   try {
-    const total = await syncItems();
-    const totalvariantes = await syncVariants();
-    const totalstores = await syncStores();
-    return res.status(200).json({ message: `Sincronizados ${total}, ${totalvariantes}, ${totalstores} productos` });
+    const result = await runSync();
+
+    return res.status(200).json({
+      message: `Sincronizados: 
+      Items: ${result.items}, 
+      Variantes: ${result.variants}, 
+      Stock Tiendas: ${result.stores}`,
+      ...result,
+    });
+
   } catch (error) {
-  if (error instanceof Error) {
-    console.error("Error sincronizando datos:", error.message);
-    return res.status(500).json({ message: "Error interno del servidor", error: error.message });
-  } else {
-    console.error("Error inesperado:", error);
+    console.error("Error sincronizando datos:", error);
     return res.status(500).json({ message: "Error interno del servidor" });
   }
-}
 };
-
 
 export const getProducts = async (req: any, res: any) => {
   try {

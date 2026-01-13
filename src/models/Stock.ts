@@ -42,7 +42,7 @@ export default class Stock extends Model {
 
   @Column({
     type: DataType.STRING,
-    allowNull: false,
+    allowNull: true,
   })
   declare barcode: string;
 

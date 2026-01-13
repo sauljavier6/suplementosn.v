@@ -1,10 +1,10 @@
 // src/routes/loyverseRoutes.ts
 import { Router } from "express";
-import { deleteImage, getImages, getProductByBusqueda, getProductByCategory, getProductById, getProducts, postEmail, syncData } from "../controllers/productController";
+import { deleteImage, getImages, getProductByBusqueda, getProductByCategory, getProductById, getProducts, postEmail, syncDataManual } from "../controllers/productController";
 
 const router = Router();
 
-router.get("/", syncData);
+router.get("/", syncDataManual);
 router.get("/catalogo/:categoria", getProductByCategory);
 router.get("/catalogo", getProducts);
 router.get("/producto/:id", getProductById);

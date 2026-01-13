@@ -47,7 +47,6 @@ export default class Store extends Model {
   })
   declare updated_at: Date;
 
-  // 🔑 Campo concatenado único
   @Unique
   @Column({
     type: DataType.STRING,
@@ -55,7 +54,6 @@ export default class Store extends Model {
   })
   declare store_variant_key: string;
 
-  // 🧠 Hook que se ejecuta antes de validar o guardar
   @BeforeValidate
   static generateStoreVariantKey(instance: Store) {
     if (instance.store_id && instance.variant_id) {
