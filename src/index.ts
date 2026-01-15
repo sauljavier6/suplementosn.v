@@ -26,7 +26,7 @@ sequelize.sync({ alter: true }).then(() => {
   app.listen(PORT, () => {
     console.log(`Servidor corriendo en http://localhost:${PORT}`);
 
-    startSyncJob();
-    console.log("🔁 Sync Job iniciado");
+    //startSyncJob();
+    //console.log("🔁 Sync Job iniciado");
   });
 }).catch(err => console.error("❌ Error al conectar BD:", err));
